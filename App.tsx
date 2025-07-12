@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Provider as ReduxProvider } from 'react-redux';
+import { PaperProvider } from 'react-native-paper';
+import store from './app/store';
+import AppNavigator from './app/navigation/AppNavigator';
+import { lightTheme, darkTheme } from './app/utils/theme';
+import { useAppSelector } from './app/store/hooks';
+
+const ThemedApp = () => {
+  const themeType = useAppSelector((state) => (state as any).settings.theme);
+  const theme = themeType === 'dark' ? darkTheme : lightTheme;
+  return (
+    <PaperProvider theme={theme}>
+      <AppNavigator />
+    </PaperProvider>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ReduxProvider store={store}>
+      <ThemedApp />
+    </ReduxProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
